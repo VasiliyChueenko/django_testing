@@ -29,7 +29,7 @@ class TestRoutes(TestCase):
             (self.auth_user_client, False),
         )
         for user, note_in_list in users_statuses:
-            with self.subTest():
+            with self.subTest(msg=f'Testing user {user}'):
                 url = reverse('notes:list')
                 response = user.get(url)
                 object_list = response.context['object_list']

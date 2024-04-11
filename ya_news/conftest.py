@@ -25,8 +25,9 @@ def author(django_user_model):
 @pytest.fixture
 def author_client(author, client):
     """Создаём автора новости."""
-    client.force_login(author)
-    return client
+    author_client = client
+    author_client.force_login(author)
+    return author_client
 
 
 @pytest.fixture
@@ -57,7 +58,7 @@ def list_news():
     today, list_news = datetime.today(), []
     for index in range(settings.NEWS_COUNT_ON_HOME_PAGE):
         news = News.objects.create(
-            title='Новость {index}',
+            title=f'Новость {index}',
             text='Текст новости',
         )
         news.date = today - timedelta(days=index)
@@ -72,10 +73,11 @@ def list_comments(news, author):
     now, list_comment = timezone.now(), []
     for index in range(2):
         comment = Comment.objects.create(
-            text='Текст {index}',
+            text=f'Текст {index}',
             news=news,
             author=author,
         )
         comment.created = now + timedelta(days=index)
         comment.save()
         list_comment.append(comment)
+    return list_comment
