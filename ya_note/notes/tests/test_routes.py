@@ -33,7 +33,7 @@ class TestRoutes(TestCase):
             'users:signup',
         )
         for name in urls:
-            with self.subTest():
+            with self.subTest(name=name):
                 url = reverse(name)
                 response = self.author_client.get(url)
                 self.assertEqual(response.status_code, HTTPStatus.OK)
@@ -45,7 +45,7 @@ class TestRoutes(TestCase):
             'notes:add',
         )
         for name in urls:
-            with self.subTest():
+            with self.subTest(name=name):
                 url = reverse(name)
                 response = self.author_client.get(url)
                 self.assertEqual(response.status_code, HTTPStatus.OK)

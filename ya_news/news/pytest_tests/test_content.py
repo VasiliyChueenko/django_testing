@@ -35,6 +35,9 @@ def test_comments_order(client, news, list_comments):
     news = response.context['news']
     all_comments = news.comment_set.all()
     assert all_comments[0].created < all_comments[1].created
+    sorted_comments = sorted(all_comments, key=lambda x: x.id)
+    for i in range(1, len(sorted_comments)):
+        assert sorted_comments[i - 1].id < sorted_comments[i].id
 
 
 @pytest.mark.parametrize(

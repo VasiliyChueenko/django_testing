@@ -5,25 +5,25 @@ import pytest
 from news.models import Comment
 from pytest_django.asserts import assertRedirects, assertFormError
 
-from conftest import TEXT_COMMENT
+from news.pytest_tests.conftest import TEXT_COMMENT
 from news.forms import BAD_WORDS, WARNING
 from news.models import Comment
 
 
 @pytest.fixture
-def clear_db():
+def clear_comments():
     Comment.objects.all().delete()
 
 
 @pytest.mark.django_db
-def test_anonymous_user_cant_create_comment(client, clear_db,
+def test_anonymous_user_cant_create_comment(client, clear_comments,
                                             new_text_comment, news):
     url = reverse('news:detail', args=(news.id,))
     client.post(url, data=new_text_comment)
     assert Comment.objects.count() == 0
 
 
-def test_user_can_create_comment(author_client, author, clear_db,
+def test_user_can_create_comment(author_client, author, clear_comments,
                                  new_text_comment, news):
     url = reverse('news:detail', args=(news.id,))
     author_client.post(url, data=new_text_comment)
@@ -35,7 +35,7 @@ def test_user_can_create_comment(author_client, author, clear_db,
 
 
 def test_user_cant_use_bad_words(author_client,
-                                 clear_db, news):
+                                 clear_comments, news):
     bad_words_data = {'text': f'Какой-то текст, {BAD_WORDS[0]}, еще текст'}
     url = reverse('news:detail', args=(news.id,))
     response = author_client.post(url, data=bad_words_data)
@@ -50,7 +50,7 @@ def test_user_cant_use_bad_words(author_client,
 
 
 def test_author_can_delete_comment(author_client,
-                                   clear_db, news, comment):
+                                   clear_comments, news, comment):
     news_url = reverse('news:detail', args=(news.id,))
     url_to_comments = reverse('news:delete', args=(comment.id,))
     response = author_client.delete(url_to_comments)
@@ -60,7 +60,7 @@ def test_author_can_delete_comment(author_client,
 
 
 def test_user_cant_delete_comment_of_another_user(admin_client,
-                                                  clear_db, comment):
+                                                  clear_comments, comment):
     comment_url = reverse('news:delete', args=(comment.id,))
     response = admin_client.delete(comment_url)
     assert response.status_code == HTTPStatus.NOT_FOUND
@@ -68,7 +68,7 @@ def test_user_cant_delete_comment_of_another_user(admin_client,
     assert comments_count == 1
 
 
-def test_author_can_edit_comment(author_client, clear_db,
+def test_author_can_edit_comment(author_client, clear_comments,
                                  new_text_comment, news, comment):
     news_url = reverse('news:detail', args=(news.id,))
     comment_url = reverse('news:edit', args=(comment.id,))
@@ -79,7 +79,8 @@ def test_author_can_edit_comment(author_client, clear_db,
 
 
 def test_user_cant_edit_comment_of_another_user(admin_client,
-                                                clear_db, new_text_comment,
+                                                clear_comments,
+                                                new_text_comment,
                                                 comment):
     comment_url = reverse('news:edit', args=(comment.id,))
     response = admin_client.post(comment_url, data=new_text_comment)
