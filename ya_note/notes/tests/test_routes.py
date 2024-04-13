@@ -78,7 +78,7 @@ class TestRoutes(TestCase):
             ('notes:delete', (self.note.slug,)),
         )
         for name, args in urls:
-            with self.subTest():
+            with self.subTest(name=name):
                 url = reverse(name, args=args)
                 redirect_url = f'{login_url}?next={url}'
                 response = self.client.get(url)

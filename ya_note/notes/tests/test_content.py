@@ -41,7 +41,7 @@ class TestRoutes(TestCase):
             ('notes:edit', (self.note.slug,)),
         )
         for name, args in urls:
-            with self.subTest():
+            with self.subTest(msg=f'Testing form in page {name}'):
                 url = reverse(name, args=args)
                 response = self.author_client.get(url)
                 self.assertIn('form', response.context)
