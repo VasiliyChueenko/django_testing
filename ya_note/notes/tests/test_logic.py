@@ -1,7 +1,7 @@
 
 from http import HTTPStatus
-from django.urls import reverse
 
+from django.urls import reverse
 from pytils.translit import slugify
 
 from notes.models import Note

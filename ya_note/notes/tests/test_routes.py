@@ -1,8 +1,8 @@
 from http import HTTPStatus
 
 from django.urls import reverse
-from notes.models import Note
 
+from notes.models import Note
 from notes.tests.common import CommonTestCase
 
 

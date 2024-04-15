@@ -1,8 +1,8 @@
 from datetime import datetime, timedelta
-from django.conf import settings
-from django.utils import timezone
 
 import pytest
+from django.conf import settings
+from django.utils import timezone
 
 from news.models import News, Comment
 
